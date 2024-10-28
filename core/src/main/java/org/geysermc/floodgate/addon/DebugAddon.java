@@ -58,7 +58,7 @@ public final class DebugAddon implements InjectorAddon {
         logger.info("Successfully called onInject. To server? " + toServer);
 
         AtomicInteger packetCount = new AtomicInteger();
-
+        logger.info("Context names: " + channel.pipeline().names());
         channel.pipeline().addBefore(
                 packetEncoder, "floodgate_debug_out",
                 new ChannelOutDebugHandler(implementationName, toServer, packetCount, logger)
