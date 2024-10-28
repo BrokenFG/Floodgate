@@ -35,6 +35,7 @@ import io.netty.util.AttributeKey;
 import it.unimi.dsi.fastutil.Pair;
 import it.unimi.dsi.fastutil.objects.ObjectObjectImmutablePair;
 import java.net.InetSocketAddress;
+import java.util.Arrays;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionException;
 import lombok.AccessLevel;
@@ -97,6 +98,7 @@ public final class FloodgateHandshakeHandler {
      */
     public HostnameSeparationResult separateHostname(@NonNull String hostname) {
         String[] hostnameItems = hostname.split("\0");
+        System.out.println(Arrays.toString(hostnameItems));
         String floodgateData = null;
         int dataVersion = -1;
 
