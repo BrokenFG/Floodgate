@@ -153,6 +153,8 @@ public final class FloodgateHandshakeHandler {
 
             try {
                 BedrockData bedrockData = BedrockData.fromString(decrypted);
+                System.out.println(bedrockData);
+                System.out.println(EXPECTED_LENGTH);
 
                 if (bedrockData.getDataLength() != EXPECTED_LENGTH) {
                     throw callHandlerAndReturnResult(
