@@ -26,6 +26,7 @@
 package org.geysermc.floodgate.addon.data;
 
 import io.netty.channel.Channel;
+import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.UUID;
 import lombok.Getter;
@@ -69,9 +70,9 @@ public class HandshakeDataImpl implements HandshakeData {
         if (bedrockData != null) {
             boolean isLicense = false;
             try {
-                Method isLicenseMethod = bedrockData.getClass().getDeclaredMethod("isLicense");
+                Field isLicenseMethod = bedrockData.getClass().getDeclaredField("license");
                 isLicenseMethod.setAccessible(true);
-                isLicense = (Boolean) isLicenseMethod.invoke(bedrockData);
+                isLicense = isLicenseMethod.getBoolean(bedrockData);
             } catch (Exception e) {
                 e.printStackTrace();
             }

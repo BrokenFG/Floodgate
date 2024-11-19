@@ -25,6 +25,7 @@
 
 package org.geysermc.floodgate.player;
 
+import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
@@ -85,9 +86,9 @@ public final class FloodgatePlayerImpl implements FloodgatePlayer {
 
         boolean isLicense = false;
         try {
-            Method isLicenseMethod = data.getClass().getDeclaredMethod("isLicense");
+            Field isLicenseMethod = data.getClass().getDeclaredField("license");
             isLicenseMethod.setAccessible(true);
-            isLicense = (Boolean) isLicenseMethod.invoke(data);
+            isLicense = isLicenseMethod.getBoolean(data);
         } catch (Exception e) {
             e.printStackTrace();
         }
