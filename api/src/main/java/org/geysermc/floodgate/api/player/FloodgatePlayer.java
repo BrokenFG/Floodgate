@@ -113,6 +113,8 @@ public interface FloodgatePlayer {
      */
     boolean isLinked();
 
+    boolean isLicense();
+
     default boolean sendForm(Form form) {
         return FloodgateApi.getInstance().sendForm(getCorrectUniqueId(), form);
     }

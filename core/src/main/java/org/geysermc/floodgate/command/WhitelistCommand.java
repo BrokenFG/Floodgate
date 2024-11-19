@@ -112,6 +112,8 @@ public class WhitelistCommand implements FloodgateCommand {
 
         if (name.startsWith(config.getUsernamePrefix())) {
             name = name.substring(config.getUsernamePrefix().length());
+        } else if (name.startsWith("*")) {
+            name = name.substring(1);
         }
 
         if (name.isEmpty() || name.length() > 16) {

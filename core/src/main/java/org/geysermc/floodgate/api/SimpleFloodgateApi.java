@@ -83,6 +83,12 @@ public class SimpleFloodgateApi implements FloodgateApi {
     }
 
     @Override
+    public boolean isLicensePlayer(UUID uuid) {
+        FloodgatePlayer player = getPlayer(uuid);
+        return player != null && player.isLicense();
+    }
+
+    @Override
     public FloodgatePlayer getPlayer(UUID uuid) {
         FloodgatePlayer selfPlayer = players.get(uuid);
         if (selfPlayer != null) {

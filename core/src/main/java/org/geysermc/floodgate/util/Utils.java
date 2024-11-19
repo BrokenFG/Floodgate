@@ -92,7 +92,6 @@ public class Utils {
     }
 
     public static UUID getJavaUuid(String xuid) {
-        if (xuid == null) return new UUID(0, 5);
         return getJavaUuid(Long.parseLong(xuid));
     }
 

@@ -67,6 +67,8 @@ public interface FloodgateApi {
      */
     boolean isFloodgatePlayer(UUID uuid);
 
+    boolean isLicensePlayer(UUID uuid);
+
     /**
      * Get info about the given Bedrock player
      *

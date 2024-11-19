@@ -25,6 +25,7 @@
 
 package org.geysermc.floodgate.player;
 
+import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
@@ -64,6 +65,7 @@ public final class FloodgatePlayerImpl implements FloodgatePlayer {
 
     private final int subscribeId;
     private final String verifyCode;
+    private final boolean license;
 
     @Getter(AccessLevel.PRIVATE)
     private Map<PropertyKey, Object> propertyKeyToValue;
@@ -81,11 +83,20 @@ public final class FloodgatePlayerImpl implements FloodgatePlayer {
 
         LinkedPlayer linkedPlayer = handshakeData.getLinkedPlayer();
 
+        boolean isLicense = false;
+        try {
+            Method isLicenseMethod = data.getClass().getDeclaredMethod("isLicense");
+            isLicenseMethod.setAccessible(true);
+            isLicense = (Boolean) isLicenseMethod.invoke(data);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
         return new FloodgatePlayerImpl(
                 data.getVersion(), data.getUsername(), handshakeData.getJavaUsername(),
                 javaUniqueId, data.getXuid(), deviceOs, data.getLanguageCode(), uiProfile,
                 inputMode, data.getIp(), data.isFromProxy(), api instanceof ProxyFloodgateApi,
-                linkedPlayer, data.getSubscribeId(), data.getVerifyCode());
+                linkedPlayer, data.getSubscribeId(), data.getVerifyCode(), isLicense);
     }
 
     @Override
@@ -103,10 +114,51 @@ public final class FloodgatePlayerImpl implements FloodgatePlayer {
         return linkedPlayer != null;
     }
 
+    @Override
+    public boolean isLicense() {
+        return license;
+    }
+
     public BedrockData toBedrockData() {
-        return BedrockData.of(version, username, xuid, deviceOs.ordinal(), languageCode,
-                uiProfile.ordinal(), inputMode.ordinal(), ip, linkedPlayer, proxy, subscribeId,
-                verifyCode);
+        BedrockData bedrockData = null;
+        try {
+            Method ofMethod = BedrockData.class.getDeclaredMethod(
+                    "of",
+                    int.class,
+                    String.class,
+                    String.class,
+                    int.class,
+                    String.class,
+                    int.class,
+                    int.class,
+                    String.class,
+                    LinkedPlayer.class,
+                    boolean.class,
+                    String.class,
+                    String.class,
+                    boolean.class
+            );
+            ofMethod.setAccessible(true);
+            bedrockData = (BedrockData) ofMethod.invoke(
+                    null,
+                    version,
+                    username,
+                    xuid,
+                    deviceOs.ordinal(),
+                    languageCode,
+                    uiProfile.ordinal(),
+                    inputMode.ordinal(),
+                    ip,
+                    linkedPlayer,
+                    proxy,
+                    subscribeId,
+                    verifyCode,
+                    license
+            );
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return bedrockData;
     }
 
     @Override

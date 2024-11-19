@@ -26,6 +26,7 @@
 package org.geysermc.floodgate.addon.data;
 
 import io.netty.channel.Channel;
+import java.lang.reflect.Method;
 import java.util.UUID;
 import lombok.Getter;
 import lombok.Setter;
@@ -66,7 +67,15 @@ public class HandshakeDataImpl implements HandshakeData {
         UUID javaUniqueId = null;
 
         if (bedrockData != null) {
-            String prefix = config.getUsernamePrefix();
+            boolean isLicense = false;
+            try {
+                Method isLicenseMethod = bedrockData.getClass().getDeclaredMethod("isLicense");
+                isLicenseMethod.setAccessible(true);
+                isLicense = (Boolean) isLicenseMethod.invoke(bedrockData);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            String prefix = isLicense ? config.getUsernamePrefix() : "*";
             int usernameLength = Math.min(bedrockData.getUsername().length(), 16 - prefix.length());
             javaUsername = prefix + bedrockData.getUsername().substring(0, usernameLength);
             if (config.isReplaceSpaces()) {
