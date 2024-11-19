@@ -68,15 +68,7 @@ public class HandshakeDataImpl implements HandshakeData {
         UUID javaUniqueId = null;
 
         if (bedrockData != null) {
-            boolean isLicense = false;
-            try {
-                Field isLicenseMethod = bedrockData.getClass().getDeclaredField("license");
-                isLicenseMethod.setAccessible(true);
-                isLicense = isLicenseMethod.getBoolean(bedrockData);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            String prefix = isLicense ? config.getUsernamePrefix() : "*";
+            String prefix = bedrockData.isLicense() ? config.getUsernamePrefix() : "*";
             int usernameLength = Math.min(bedrockData.getUsername().length(), 16 - prefix.length());
             javaUsername = prefix + bedrockData.getUsername().substring(0, usernameLength);
             if (config.isReplaceSpaces()) {

@@ -84,20 +84,11 @@ public final class FloodgatePlayerImpl implements FloodgatePlayer {
 
         LinkedPlayer linkedPlayer = handshakeData.getLinkedPlayer();
 
-        boolean isLicense = false;
-        try {
-            Field isLicenseMethod = data.getClass().getDeclaredField("license");
-            isLicenseMethod.setAccessible(true);
-            isLicense = isLicenseMethod.getBoolean(data);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
         return new FloodgatePlayerImpl(
                 data.getVersion(), data.getUsername(), handshakeData.getJavaUsername(),
                 javaUniqueId, data.getXuid(), deviceOs, data.getLanguageCode(), uiProfile,
                 inputMode, data.getIp(), data.isFromProxy(), api instanceof ProxyFloodgateApi,
-                linkedPlayer, data.getSubscribeId(), data.getVerifyCode(), isLicense);
+                linkedPlayer, data.getSubscribeId(), data.getVerifyCode(), data.isLicense());
     }
 
     @Override
@@ -121,45 +112,9 @@ public final class FloodgatePlayerImpl implements FloodgatePlayer {
     }
 
     public BedrockData toBedrockData() {
-        BedrockData bedrockData = null;
-        try {
-            Method ofMethod = BedrockData.class.getDeclaredMethod(
-                    "of",
-                    int.class,
-                    String.class,
-                    String.class,
-                    int.class,
-                    String.class,
-                    int.class,
-                    int.class,
-                    String.class,
-                    LinkedPlayer.class,
-                    boolean.class,
-                    String.class,
-                    String.class,
-                    boolean.class
-            );
-            ofMethod.setAccessible(true);
-            bedrockData = (BedrockData) ofMethod.invoke(
-                    null,
-                    version,
-                    username,
-                    xuid,
-                    deviceOs.ordinal(),
-                    languageCode,
-                    uiProfile.ordinal(),
-                    inputMode.ordinal(),
-                    ip,
-                    linkedPlayer,
-                    proxy,
-                    subscribeId,
-                    verifyCode,
-                    license
-            );
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return bedrockData;
+        return BedrockData.of(version, username, xuid, deviceOs.ordinal(), languageCode,
+                uiProfile.ordinal(), inputMode.ordinal(), ip, linkedPlayer, proxy, subscribeId,
+                verifyCode, license);
     }
 
     @Override
