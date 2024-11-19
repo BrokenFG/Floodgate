@@ -98,7 +98,6 @@ public final class FloodgateHandshakeHandler {
      */
     public HostnameSeparationResult separateHostname(@NonNull String hostname) {
         String[] hostnameItems = hostname.split("\0");
-        System.out.println(Arrays.toString(hostnameItems));
         String floodgateData = null;
         int dataVersion = -1;
 

@@ -44,7 +44,6 @@ public final class ProxyFloodgateApi extends SimpleFloodgateApi {
     }
 
     public String createEncryptedDataString(BedrockData bedrockData) {
-        System.out.println(bedrockData.toString());
         return new String(createEncryptedData(bedrockData), StandardCharsets.UTF_8);
     }
 }
