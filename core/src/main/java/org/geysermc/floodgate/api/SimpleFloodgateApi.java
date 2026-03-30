@@ -123,7 +123,13 @@ public class SimpleFloodgateApi implements FloodgateApi {
 
     @Override
     public boolean sendForm(UUID uuid, Form form) {
-        return pluginMessageManager.getChannel(FormChannel.class).sendForm(uuid, form);
+        FloodgatePlayer player = getPlayer(uuid);
+        // Before this check was added, we used to just send the form to the user no matter if they
+        // were a FloodgatePlayer or not. Keep this since the Floodgate API is deprecated anyway.
+        if (player == null) {
+            return true;
+        }
+        return pluginMessageManager.getChannel(FormChannel.class).sendForm(player, form);
     }
 
     @Override
@@ -133,7 +139,13 @@ public class SimpleFloodgateApi implements FloodgateApi {
 
     @Override
     public boolean closeForm(UUID uuid) {
-        return pluginMessageManager.getChannel(FormChannel.class).closeForm(uuid);
+        FloodgatePlayer player = getPlayer(uuid);
+        // Before this check was added, we used to just send the form to the user no matter if they
+        // were a FloodgatePlayer or not. Keep this since the Floodgate API is deprecated anyway.
+        if (player == null) {
+            return true;
+        }
+        return pluginMessageManager.getChannel(FormChannel.class).closeForm(player);
     }
 
     @Override
@@ -223,7 +235,7 @@ public class SimpleFloodgateApi implements FloodgateApi {
         }
     }
 
-    private FloodgatePlayer getPendingRemovePlayer(UUID correctUuid) {
+    public FloodgatePlayer getPendingRemovePlayer(UUID correctUuid) {
         for (FloodgatePlayer player : pendingRemove.asMap().values()) {
             if (player.getCorrectUniqueId().equals(correctUuid)) {
                 return player;
